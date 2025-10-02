@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import path from 'path';
 import { initializeDatabase, insertSampleData, resetSampleData } from './database/init';
 import { errorHandler } from './middleware/errorHandler';
@@ -9,12 +10,13 @@ const PORT = process.env.PORT || 5000;
 
 // 미들웨어 설정
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
+  origin: process.env.NODE_ENV === 'production'
     ? ['http://localhost:3000'] // 프로덕션에서는 실제 도메인으로 변경
     : true, // 개발 환경에서는 모든 origin 허용
   credentials: true
 }));
 
+app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -34,12 +36,20 @@ app.get('/api/health', (req, res) => {
 });
 
 // API 라우트 import
+import authRoutes from './routes/authRoutes';
+import userRoutes from './routes/userRoutes';
+import activityLogRoutes from './routes/activityLogRoutes';
+import backupRoutes from './routes/backupRoutes';
 import productRoutes from './routes/productRoutes';
 import transactionRoutes from './routes/transactionRoutes';
 import inventoryRoutes from './routes/inventoryRoutes';
 import exportRoutes from './routes/exportRoutes';
 
 // API 라우트 설정
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/logs', activityLogRoutes);
+app.use('/api/backup', backupRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/inventory', inventoryRoutes);

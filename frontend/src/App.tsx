@@ -1,9 +1,12 @@
-// import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { InventoryProvider } from './contexts/InventoryContext';
 import Layout from './components/Layout/Layout';
 import MainDashboard from './components/Dashboard/MainDashboard';
+import LoginPage from './components/Auth/LoginPage';
+import { CircularProgress, Box } from '@mui/material';
 
 const theme = createTheme({
   palette: {
@@ -51,15 +54,48 @@ const theme = createTheme({
   },
 });
 
+// Protected Route Component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+};
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <InventoryProvider>
-        <Layout>
-          <MainDashboard />
-        </Layout>
-      </InventoryProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <InventoryProvider>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/*"
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <MainDashboard />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </InventoryProvider>
+        </AuthProvider>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

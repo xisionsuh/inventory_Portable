@@ -1,4 +1,5 @@
 import { db } from '../config/database';
+import bcrypt from 'bcryptjs';
 import fs from 'fs';
 import path from 'path';
 
@@ -21,10 +22,32 @@ export async function initializeDatabase(): Promise<void> {
       await db.run(statement);
     }
 
+    // 관리자 계정 생성 (없는 경우)
+    await createDefaultAdmin();
+
     console.log('데이터베이스 초기화가 완료되었습니다.');
   } catch (error) {
     console.error('데이터베이스 초기화 중 오류 발생:', error);
     throw error;
+  }
+}
+
+// 기본 관리자 계정 생성
+async function createDefaultAdmin(): Promise<void> {
+  try {
+    const existingAdmin = await db.get('SELECT id FROM users WHERE username = ?', ['admin']);
+
+    if (!existingAdmin) {
+      const password_hash = await bcrypt.hash('admin123', 10);
+      await db.run(
+        `INSERT INTO users (username, email, password_hash, full_name, role)
+         VALUES (?, ?, ?, ?, ?)`,
+        ['admin', 'admin@inventory.com', password_hash, '시스템 관리자', 'admin']
+      );
+      console.log('기본 관리자 계정이 생성되었습니다. (username: admin, password: admin123)');
+    }
+  } catch (error) {
+    console.error('관리자 계정 생성 중 오류 발생:', error);
   }
 }
 

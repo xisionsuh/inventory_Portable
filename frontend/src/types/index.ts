@@ -109,3 +109,60 @@ export interface ApiError {
   path: string;
   method: string;
 }
+
+// User 타입
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  full_name: string;
+  role: 'admin' | 'user';
+  is_active: number;
+  last_login?: string;
+  created_at: string;
+}
+
+// 로그인 데이터
+export interface LoginData {
+  username: string;
+  password: string;
+}
+
+// 회원가입 데이터
+export interface RegisterData {
+  username: string;
+  email: string;
+  password: string;
+  full_name: string;
+  role?: 'admin' | 'user';
+}
+
+// Activity Log 타입
+export interface ActivityLog {
+  id: number;
+  user_id: number;
+  action_type: string;
+  table_name: string;
+  record_id?: number;
+  old_data?: string;
+  new_data?: string;
+  ip_address?: string;
+  user_agent?: string;
+  created_at: string;
+  username?: string;
+  full_name?: string;
+}
+
+// Backup 타입
+export interface Backup {
+  filename: string;
+  path: string;
+  size: number;
+  created_at: Date;
+  meta?: {
+    backup_time: string;
+    reason: string;
+    original_path: string;
+    file_size: number;
+  };
+}
