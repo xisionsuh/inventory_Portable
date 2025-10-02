@@ -6,6 +6,9 @@ import { InventoryProvider } from './contexts/InventoryContext';
 import Layout from './components/Layout/Layout';
 import MainDashboard from './components/Dashboard/MainDashboard';
 import LoginPage from './components/Auth/LoginPage';
+import ActivityLogPage from './components/ActivityLog/ActivityLogPage';
+import UserManagementPage from './components/User/UserManagementPage';
+import BackupManagementPage from './components/Backup/BackupManagementPage';
 import { CircularProgress, Box } from '@mui/material';
 
 const theme = createTheme({
@@ -83,11 +86,41 @@ function App() {
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route
-                path="/*"
+                path="/"
                 element={
                   <ProtectedRoute>
                     <Layout>
                       <MainDashboard />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/activity-logs"
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <ActivityLogPage />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/users"
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <UserManagementPage />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/backups"
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <BackupManagementPage />
                     </Layout>
                   </ProtectedRoute>
                 }

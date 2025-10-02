@@ -155,14 +155,9 @@ export interface ActivityLog {
 
 // Backup 타입
 export interface Backup {
-  filename: string;
-  path: string;
-  size: number;
-  created_at: Date;
-  meta?: {
-    backup_time: string;
-    reason: string;
-    original_path: string;
-    file_size: number;
-  };
+  file_name: string;
+  backup_time: string;
+  reason?: string;
+  original_path: string;
+  file_size: number;
 }

@@ -8,8 +8,6 @@ import {
   CircularProgress,
   Fab,
   Tooltip,
-  Tabs,
-  Tab,
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useInventory } from '../../contexts/InventoryContext';
